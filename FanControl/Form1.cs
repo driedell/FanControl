@@ -7,17 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FTD2XX_NET;
 
 namespace FanControl
 {
     public partial class Form1 : Form
     {
+        // Create new instance of the FTDI device class
+        FTDI myFtdiDevice = new FTDI();
+
         public Form1()
         {
             InitializeComponent();
 
-            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount - 1);
-            myFanPanel.label1.Text = "fan" + (tableLayoutPanel1.ColumnCount - 1).ToString();
+            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount - 1, myFtdiDevice);
+            myFanPanel.initialize();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -25,18 +29,18 @@ namespace FanControl
             if (!(Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back)))
                 e.Handled = true;
         }
-
-
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
             tableLayoutPanel1.ColumnCount++;
-            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount-1);
-            myFanPanel.label1.Text = "fan" + (tableLayoutPanel1.ColumnCount - 1).ToString();
-
-            tableLayoutPanel1.Refresh();
+            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount-1, myFtdiDevice);
 
             Console.WriteLine("added a new fan panel");
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
     }
