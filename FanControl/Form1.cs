@@ -15,35 +15,29 @@ namespace FanControl
         public Form1()
         {
             InitializeComponent();
-        }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            textBox1.Text = trackBar1.Value.ToString();
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            int value = Convert.ToInt32(textBox1.Text);
-
-            if (value > 255)
-            {
-                value = 255;
-                textBox1.Text = "255";
-            }
-            else if (value < 0)
-            {
-                value = 0;
-                textBox1.Text = "0";
-            }
-
-            trackBar1.Value = value;
+            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount - 1);
+            myFanPanel.label1.Text = "fan" + (tableLayoutPanel1.ColumnCount - 1).ToString();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!(Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back)))
                 e.Handled = true;
+        }
+
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            tableLayoutPanel1.ColumnCount++;
+            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount-1);
+            myFanPanel.label1.Text = "fan" + (tableLayoutPanel1.ColumnCount - 1).ToString();
+
+            tableLayoutPanel1.Refresh();
+
+            Console.WriteLine("added a new fan panel");
+
         }
     }
 }
