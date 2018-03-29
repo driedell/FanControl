@@ -1,0 +1,10 @@
+c:\users\driedell\source\repos\FanControl\FanControl\bin\Debug\FanControl.exe.config
+c:\users\driedell\source\repos\FanControl\FanControl\bin\Debug\FanControl.exe
+c:\users\driedell\source\repos\FanControl\FanControl\bin\Debug\FanControl.pdb
+c:\users\driedell\source\repos\FanControl\FanControl\obj\Debug\FanControl.csprojResolveAssemblyReference.cache
+c:\users\driedell\source\repos\FanControl\FanControl\obj\Debug\FanControl.Form1.resources
+c:\users\driedell\source\repos\FanControl\FanControl\obj\Debug\FanControl.Properties.Resources.resources
+c:\users\driedell\source\repos\FanControl\FanControl\obj\Debug\FanControl.csproj.GenerateResource.cache
+c:\users\driedell\source\repos\FanControl\FanControl\obj\Debug\FanControl.csproj.CoreCompileInputs.cache
+c:\users\driedell\source\repos\FanControl\FanControl\obj\Debug\FanControl.exe
+c:\users\driedell\source\repos\FanControl\FanControl\obj\Debug\FanControl.pdb
