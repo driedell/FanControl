@@ -451,6 +451,35 @@ namespace FanControl
             Console.WriteLine("exited button1_click");
         }
 
+        public bool[] ping()
+        {
+            Console.WriteLine("entered ping");
+            bool[] I2C_device_present = new bool[16];
+            for (int i = 0; i < 16; i++)
+            {
+                byte slave_address = (byte)(i << 3);
+
+                I2C_SetStart();                                                     // I2C START
+
+                I2C_SendDeviceAddrAndCheckACK((byte)(slave_address), false);       // I2C ADDRESS (for write)
+                if (I2C_Ack == true)
+                {
+                    Console.WriteLine(i.ToString() + " " + Convert.ToString(i<<3, 2) + " ack");
+                    I2C_device_present[i] = true;
+                }
+                else
+                {
+                    Console.WriteLine(i.ToString() + " " + Convert.ToString(i << 3, 2) + " nack");
+                    I2C_device_present[i] = false;
+                }
+
+                AppStatus += I2C_SetStop();                                                     // I2C STOP
+
+
+            }
+            return I2C_device_present;
+        }
+
         public byte I2C_ConfigureMpsse()
         {
 

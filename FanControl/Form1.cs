@@ -15,12 +15,13 @@ namespace FanControl
     {
         // Create new instance of the FTDI device class
         FTDI myFtdiDevice = new FTDI();
+        fanPanel myFanPanel;
 
         public Form1()
         {
             InitializeComponent();
 
-            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount - 1, myFtdiDevice);
+            myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount - 1, myFtdiDevice);
             myFanPanel.initialize();
         }
 
@@ -32,10 +33,19 @@ namespace FanControl
         
         private void button1_Click(object sender, EventArgs e)
         {
-            tableLayoutPanel1.ColumnCount++;
-            fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount-1, myFtdiDevice);
+            //tableLayoutPanel1.ColumnCount++;
+            //fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount-1, myFtdiDevice);
 
-            Console.WriteLine("added a new fan panel");
+            //Console.WriteLine("added a new fan panel");
+
+            // Find I2C Devices
+
+            bool[] devices = myFanPanel.ping();
+
+            foreach (bool device in devices)
+            {
+                Console.WriteLine(device);
+            }
 
         }
 
