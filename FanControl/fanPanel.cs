@@ -9,23 +9,25 @@ using System.Threading;
 
 namespace FanControl
 {
-    public class fanPanel : System.Windows.Forms.Control
+    public class fanPanel : System.Windows.Forms.TableLayoutPanel
     {
+        public bool deviceInit = false;
+
         public System.Windows.Forms.TrackBar trackBar1;
-        public System.Windows.Forms.Label label1;
-        public System.Windows.Forms.Label label2;
-        public System.Windows.Forms.Label label3;
-        public System.Windows.Forms.TextBox textBox1;
-        public System.Windows.Forms.ComboBox comboBox1;
-        public System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
+        public System.Windows.Forms.Label fanNameLabel;
+        public System.Windows.Forms.Label slaveAddressLabel;
+        public System.Windows.Forms.Label I2C_slaveAddressLabel;
+        public System.Windows.Forms.Label dutyCycleLabel;
+        public System.Windows.Forms.TextBox dutyCycleTextbox;
+        //public System.Windows.Forms.ComboBox comboBox1;
         public System.Windows.Forms.Button button1;
 
         public FTDI myFtdiDevice;
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            textBox1.Text = trackBar1.Value.ToString();
-            label3.Text = (((float)trackBar1.Value / 256) * 100).ToString("0.0") + "%";
+            dutyCycleTextbox.Text = trackBar1.Value.ToString();
+            dutyCycleLabel.Text = (((float)trackBar1.Value / 256) * 100).ToString("0.0") + "%";
 
             I2C_write_GreenPAK((byte)I2C_slave_address, 0x7A, (byte)trackBar1.Value);
 
@@ -33,17 +35,17 @@ namespace FanControl
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            int value = Convert.ToInt32(textBox1.Text);
+            int value = Convert.ToInt32(dutyCycleTextbox.Text);
 
             if (value > 255)
             {
                 value = 255;
-                textBox1.Text = "255";
+                dutyCycleTextbox.Text = "255";
             }
             else if (value < 0)
             {
                 value = 0;
-                textBox1.Text = "0";
+                dutyCycleTextbox.Text = "0";
             }
 
             trackBar1.Value = value;
@@ -55,47 +57,47 @@ namespace FanControl
                 e.Handled = true;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        //private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        //{
 
-            String value = comboBox1.Text;
-            switch (value)
-            {
-                case "0x00": I2C_slave_address = 0x00; break;
-                case "0x01": I2C_slave_address = 0x08; break;
-                case "0x02": I2C_slave_address = 0x10; break;
-                case "0x03": I2C_slave_address = 0x18; break;
-                case "0x04": I2C_slave_address = 0x20; break;
-                case "0x05": I2C_slave_address = 0x28; break;
-                case "0x06": I2C_slave_address = 0x30; break;
-                case "0x07": I2C_slave_address = 0x38; break;
-                case "0x08": I2C_slave_address = 0x40; break;
-                case "0x09": I2C_slave_address = 0x48; break;
-                case "0x0A": I2C_slave_address = 0x50; break;
-                case "0x0B": I2C_slave_address = 0x58; break;
-                case "0x0C": I2C_slave_address = 0x60; break;
-                case "0x0D": I2C_slave_address = 0x68; break;
-                case "0x0E": I2C_slave_address = 0x70; break;
-                case "0x0F": I2C_slave_address = 0x78; break;
-                default: break;
-            }
+        //    String value = comboBox1.Text;
+        //    switch (value)
+        //    {
+        //        case "0x00": I2C_slave_address = 0x00; break;
+        //        case "0x01": I2C_slave_address = 0x08; break;
+        //        case "0x02": I2C_slave_address = 0x10; break;
+        //        case "0x03": I2C_slave_address = 0x18; break;
+        //        case "0x04": I2C_slave_address = 0x20; break;
+        //        case "0x05": I2C_slave_address = 0x28; break;
+        //        case "0x06": I2C_slave_address = 0x30; break;
+        //        case "0x07": I2C_slave_address = 0x38; break;
+        //        case "0x08": I2C_slave_address = 0x40; break;
+        //        case "0x09": I2C_slave_address = 0x48; break;
+        //        case "0x0A": I2C_slave_address = 0x50; break;
+        //        case "0x0B": I2C_slave_address = 0x58; break;
+        //        case "0x0C": I2C_slave_address = 0x60; break;
+        //        case "0x0D": I2C_slave_address = 0x68; break;
+        //        case "0x0E": I2C_slave_address = 0x70; break;
+        //        case "0x0F": I2C_slave_address = 0x78; break;
+        //        default: break;
+        //    }
 
-            Console.WriteLine(I2C_slave_address);
-        }
+        //    Console.WriteLine(I2C_slave_address);
+        //}
 
-        public fanPanel(TableLayoutPanel thePanel, int column, FTDI myFtdiDevice)
+        public fanPanel(FTDI myFtdiDevice)
         {
             this.myFtdiDevice = myFtdiDevice;
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.fanNameLabel = new System.Windows.Forms.Label();
+            this.slaveAddressLabel = new System.Windows.Forms.Label();
+            this.I2C_slaveAddressLabel = new System.Windows.Forms.Label();
+            this.dutyCycleLabel = new System.Windows.Forms.Label();
+            this.dutyCycleTextbox = new System.Windows.Forms.TextBox();
+            //this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            this.tableLayoutPanel.SuspendLayout();
+            this.SuspendLayout();
             // 
             // trackBar1
             // 
@@ -111,102 +113,111 @@ namespace FanControl
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
-            // label1
+            // fanNameLabel
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "fan" + column.ToString();
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.fanNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.fanNameLabel.AutoSize = true;
+            this.fanNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fanNameLabel.Location = new System.Drawing.Point(3, 0);
+            this.fanNameLabel.Name = "label1";
+            this.fanNameLabel.Size = new System.Drawing.Size(80, 20);
+            this.fanNameLabel.TabIndex = 1;
+            this.fanNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label2
+            // slaveAddressLabel
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Slave Address:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.slaveAddressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.slaveAddressLabel.AutoSize = true;
+            this.slaveAddressLabel.Location = new System.Drawing.Point(0, 20);
+            this.slaveAddressLabel.Name = "label2";
+            this.slaveAddressLabel.Size = new System.Drawing.Size(80, 13);
+            this.slaveAddressLabel.TabIndex = 1;
+            this.slaveAddressLabel.Text = "Slave Address:";
+            this.slaveAddressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label3
+            // slaveAddressLabel
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 283);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(80, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Percent";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.I2C_slaveAddressLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.I2C_slaveAddressLabel.AutoSize = true;
+            this.I2C_slaveAddressLabel.Location = new System.Drawing.Point(0, 40);
+            this.I2C_slaveAddressLabel.Name = "label3";
+            this.I2C_slaveAddressLabel.Size = new System.Drawing.Size(80, 13);
+            this.I2C_slaveAddressLabel.TabIndex = 1;
+            this.I2C_slaveAddressLabel.Text = "";
+            this.I2C_slaveAddressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // dutyCycleLabel
+            // 
+            this.dutyCycleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.dutyCycleLabel.AutoSize = true;
+            this.dutyCycleLabel.Location = new System.Drawing.Point(0, 283);
+            this.dutyCycleLabel.Name = "label4";
+            this.dutyCycleLabel.Size = new System.Drawing.Size(80, 13);
+            this.dutyCycleLabel.TabIndex = 1;
+            this.dutyCycleLabel.Text = "Percent";
+            this.dutyCycleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(3, 263);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(80, 20);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "0";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "0x00",
-            "0x01",
-            "0x02",
-            "0x03",
-            "0x04",
-            "0x05",
-            "0x06",
-            "0x07",
-            "0x08",
-            "0x09",
-            "0x0A",
-            "0x0B",
-            "0x0C",
-            "0x0D",
-            "0x0E",
-            "0x0F"});
-            this.comboBox1.Location = new System.Drawing.Point(3, 36);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(80, 21);
-            this.comboBox1.TabIndex = 3;
-            this.comboBox1.Text = "Address";
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.dutyCycleTextbox.Location = new System.Drawing.Point(3, 263);
+            this.dutyCycleTextbox.Name = "textBox1";
+            this.dutyCycleTextbox.Size = new System.Drawing.Size(80, 20);
+            this.dutyCycleTextbox.TabIndex = 2;
+            this.dutyCycleTextbox.Text = "0";
+            this.dutyCycleTextbox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.dutyCycleTextbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            //// 
+            //// comboBox1
+            //// 
+            //this.comboBox1.FormattingEnabled = true;
+            //this.comboBox1.Items.AddRange(new object[] {
+            //"0x00",
+            //"0x01",
+            //"0x02",
+            //"0x03",
+            //"0x04",
+            //"0x05",
+            //"0x06",
+            //"0x07",
+            //"0x08",
+            //"0x09",
+            //"0x0A",
+            //"0x0B",
+            //"0x0C",
+            //"0x0D",
+            //"0x0E",
+            //"0x0F"});
+            //this.comboBox1.Location = new System.Drawing.Point(3, 36);
+            //this.comboBox1.Name = "comboBox1";
+            //this.comboBox1.Size = new System.Drawing.Size(80, 21);
+            //this.comboBox1.TabIndex = 3;
+            //this.comboBox1.Text = "Address";
+            //this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel.AutoSize = true;
-            this.tableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel.ColumnCount = 1;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel.Controls.Add(this.comboBox1, 0, 2);
-            this.tableLayoutPanel.Controls.Add(this.trackBar1, 0, 3);
-            this.tableLayoutPanel.Controls.Add(this.textBox1, 0, 4);
-            this.tableLayoutPanel.Controls.Add(this.label3, 0, 5);
-            this.tableLayoutPanel.Location = new System.Drawing.Point(231, 65);
-            this.tableLayoutPanel.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel.RowCount = 6;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.Size = new System.Drawing.Size(78, 244);
-            this.tableLayoutPanel.TabIndex = 4;
-
-            thePanel.Controls.Add(tableLayoutPanel, column, 0);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ColumnCount = 1;
+            this.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.Controls.Add(this.fanNameLabel, 0, 0);
+            this.Controls.Add(this.slaveAddressLabel, 0, 1);
+            this.Controls.Add(this.I2C_slaveAddressLabel, 0, 2);
+            //this.Controls.Add(this.comboBox1, 0, 2);
+            this.Controls.Add(this.trackBar1, 0, 3);
+            this.Controls.Add(this.dutyCycleTextbox, 0, 4);
+            this.Controls.Add(this.dutyCycleLabel, 0, 5);
+            this.Location = new System.Drawing.Point(231, 65);
+            this.Name = "tableLayoutPanel1";
+            this.RowCount = 6;
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.Size = new System.Drawing.Size(78, 244);
+            this.TabIndex = 4;
         }
 
 
@@ -242,7 +253,7 @@ namespace FanControl
         const uint ClockDivisor = 49;      //          = 199;// for 100KHz
         // Sending and receiving
         static uint NumBytesToSend = 0;
-        static uint NumBytesToRead = 0;
+        static uintytesToRead = 0;
         uint NumBytesSent = 0;
         static uint NumBytesRead = 0;
         static byte[] MPSSEbuffer = new byte[500];
@@ -262,9 +273,9 @@ namespace FanControl
         static byte ACbusReadVal = 0;
 
         // ###### Proximity sensor defines ######
-        static byte Command = 0x00;
+        //static byte Command = 0x00;
         static byte[] ProxData = new byte[500];
-        static UInt16 ProxiValue = 0;
+        //static UInt16 ProxiValue = 0;
         static double ProxiValueD = 0;
         public const byte VCNL40x0_ADDRESS = 0x13;//0x13 is 7 bit address, 0x26 is 8bit address
         // registers
@@ -375,7 +386,7 @@ namespace FanControl
         {
             Console.WriteLine("entered initialize");
 
-            bool DeviceInit = false;
+           // bool DeviceInit = false;
 
             try
             {
@@ -408,32 +419,29 @@ namespace FanControl
             // If the device opened successfully, initialise MPSSE and then configure prox and colour sensors over I2C 
             if (DeviceOpen == true)
             {
-                DeviceInit = true;
+                deviceInit = true;
 
                 AppStatus = I2C_ConfigureMpsse();
-                Console.WriteLine("app status 0: " + AppStatus);
                 if (AppStatus != 0)
                 {
                     Console.WriteLine("Failed Init");
-                    DeviceInit = false;
+                    deviceInit = false;
                 }
 
-                if (DeviceInit == true)
+                if (deviceInit == true)
                 {
                     //AppStatus = ProximitySensorConfig();
 
-                    AppStatus = I2C_write_GreenPAK(0x08, 0x7A, 0xFF);
-
-                    Console.WriteLine("app status 1: " + AppStatus);
+                    //AppStatus = I2C_write_GreenPAK(0x08, 0x7A, 0xFF);
 
                     if (AppStatus != 0)
                     {
                         Console.WriteLine("Failed ProxInit");
-                        DeviceInit = false;
+                        deviceInit = false;
                     }
                 }
 
-                if (DeviceInit == true)
+                if (deviceInit == true)
                 {
                     Console.WriteLine("Ready");
                 }
@@ -447,8 +455,6 @@ namespace FanControl
                 Application.DoEvents();
             }
             else { }
-
-            Console.WriteLine("exited button1_click");
         }
 
         public bool[] ping()
@@ -496,12 +502,8 @@ namespace FanControl
             ftStatus |= myFtdiDevice.SetBitMode(0x00, 0x00);
             ftStatus |= myFtdiDevice.SetBitMode(0x00, 0x02);         // MPSSE mode        
 
-            Console.WriteLine(0);
-
             if (ftStatus != FTDI.FT_STATUS.FT_OK)
                 return 1; // error();
-
-            Console.WriteLine(1);
 
             /***** Flush the buffer *****/
             I2C_Status = FlushBuffer();
@@ -512,13 +514,9 @@ namespace FanControl
             I2C_Status = Send_Data(NumBytesToSend);
             if (I2C_Status != 0) return 1; // error();
 
-            Console.WriteLine(2);
-
             NumBytesToRead = 2;
             I2C_Status = Receive_Data(2);
             if (I2C_Status != 0) return 1; //error();
-
-            Console.WriteLine(3);
 
             if ((InputBuffer2[0] == 0xFA) && (InputBuffer2[1] == 0xAA))
             {
@@ -529,21 +527,15 @@ namespace FanControl
                 return 1;            //error();
             }
 
-            Console.WriteLine(4);
-
             /***** Synchronize the MPSSE interface by sending bad command 0xAB *****/
             NumBytesToSend = 0;
             MPSSEbuffer[NumBytesToSend++] = 0xAB;
             I2C_Status = Send_Data(NumBytesToSend);
             if (I2C_Status != 0) return 1; // error();
 
-            Console.WriteLine(5);
-
             NumBytesToRead = 2;
             I2C_Status = Receive_Data(2);
             if (I2C_Status != 0) return 1; //error();
-
-            Console.WriteLine(6);
 
             if ((InputBuffer2[0] == 0xFA) && (InputBuffer2[1] == 0xAB))
             {
@@ -553,8 +545,6 @@ namespace FanControl
             {
                 return 1;            //error();
             }
-
-            Console.WriteLine(7);
 
             NumBytesToSend = 0;
             MPSSEbuffer[NumBytesToSend++] = 0x8A; 	// Disable clock divide by 5 for 60Mhz master clock
@@ -584,8 +574,6 @@ namespace FanControl
             MPSSEbuffer[NumBytesToSend++] = 0x80; 	//Command to set directions of lower 8 pins and force value on bits set as output 
             MPSSEbuffer[NumBytesToSend++] = (byte)(ADbusVal);
             MPSSEbuffer[NumBytesToSend++] = (byte)(ADbusDir);
-
-            Console.WriteLine(8);
 
             I2C_Status = Send_Data(NumBytesToSend);
 

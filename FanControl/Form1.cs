@@ -15,14 +15,33 @@ namespace FanControl
     {
         // Create new instance of the FTDI device class
         FTDI myFtdiDevice = new FTDI();
-        fanPanel myFanPanel;
+        fanPanel[] myFanPanels = new fanPanel[16];
 
         public Form1()
         {
             InitializeComponent();
 
-            myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount - 1, myFtdiDevice);
-            myFanPanel.initialize();
+            for (int i = 0; i < myFanPanels.Length; i++)
+            {
+                myFanPanels[i] = new fanPanel(myFtdiDevice);
+                myFanPanels[i].I2C_slaveAddressLabel.Text = "0x" + (i<<3).ToString("X2");
+                myFanPanels[i].fanNameLabel.Text = "FAN " + i.ToString();
+
+                tableLayoutPanel1.ColumnCount = i;
+                tableLayoutPanel1.Controls.Add(myFanPanels[i], i, 0);
+                myFanPanels[i].Hide();
+            }
+
+            myFanPanels[0].initialize();
+            if (myFanPanels[0].deviceInit)
+            {
+
+            }
+            else
+            {
+                MessageBox.Show("could not find FTDI device! Closing.");
+                this.Close();
+            }
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -33,25 +52,34 @@ namespace FanControl
         
         private void button1_Click(object sender, EventArgs e)
         {
-            //tableLayoutPanel1.ColumnCount++;
-            //fanPanel myFanPanel = new fanPanel(tableLayoutPanel1, tableLayoutPanel1.ColumnCount-1, myFtdiDevice);
-
-            //Console.WriteLine("added a new fan panel");
-
-            // Find I2C Devices
-
-            bool[] devices = myFanPanel.ping();
-
-            foreach (bool device in devices)
-            {
-                Console.WriteLine(device);
-            }
-
+            checkHardwareChanges();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
+            timer1.Stop();
+            checkHardwareChanges();
+            timer1.Start();
 
         }
+
+        private void checkHardwareChanges()
+        {
+            bool[] devices_present = myFanPanels[0].ping();
+
+            for (int i = 0; i < myFanPanels.Length; i++)
+            {
+                Console.WriteLine("i: " + i + ", devices_present[i]: " + devices_present[i]);
+                if (devices_present[i])
+                {
+                    myFanPanels[i].Show();
+                }
+                else
+                {
+                    myFanPanels[i].Hide();
+                }
+            }
+        }
+
     }
 }
