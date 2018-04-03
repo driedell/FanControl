@@ -253,7 +253,7 @@ namespace FanControl
         const uint ClockDivisor = 49;      //          = 199;// for 100KHz
         // Sending and receiving
         static uint NumBytesToSend = 0;
-        static uintytesToRead = 0;
+        static uint NumBytesToRead = 0;
         uint NumBytesSent = 0;
         static uint NumBytesRead = 0;
         static byte[] MPSSEbuffer = new byte[500];
@@ -276,7 +276,7 @@ namespace FanControl
         //static byte Command = 0x00;
         static byte[] ProxData = new byte[500];
         //static UInt16 ProxiValue = 0;
-        static double ProxiValueD = 0;
+        //static double ProxiValueD = 0;
         public const byte VCNL40x0_ADDRESS = 0x13;//0x13 is 7 bit address, 0x26 is 8bit address
         // registers
         public const byte REGISTER_COMMAND = 0x80;
@@ -312,9 +312,6 @@ namespace FanControl
         public const byte _GAIN_x4 = 0x01;
         public const byte _GAIN_x16 = 0x10;
         public const byte _GAIN_x60 = 0x11;
-        static byte Global_Red = 0;
-        static byte Global_Green = 0;
-        static byte Global_Blue = 0;
         uint devcount = 0;
 
         //###################################################################################################################################
